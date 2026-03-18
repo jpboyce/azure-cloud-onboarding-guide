@@ -23,3 +23,15 @@ Network Security Groups (NSG) have rules that control what network traffic is al
 - Name: A name that is unique in the NSG
 - Priority: A priority value between 100 and 4096.  Rules are processed in order.  Once a rule is matched, processing stops.
 - Source/Destination: This Source and Destination of the traffic flow that would be affected by NSG.  This can be `Any`, a specific IP address, an IP range, service tag or application security group.
+- Protocol: Options like TCP and UDP are available for this.
+- Direction: Whether the rule is to be applied on inbound or outbound traffic
+- Port Range: Individual ports or a range of ports or a mix.
+- Action: Allow or deny the traffic that matches the rule
+
+A NSG will have some default rules when created:
+- AllowVnetInBound: allows all traffic from VirtualNetworks (effectively allows any traffic from a Virtual Network Peer)
+- AllowAzureLoadBalanceInBound: Allows traffic on all ports and protocols from the AzureLoadBalancer service
+- DenyAllInbound: A deny all rule at the bottom of the priority that acts as a catchall
+- AllowVnetOutBound: allows all traffic to other Virtual Networks
+- AllowInternetOutBound: Allows traffic on all ports/protocols out to the internet
+- DenyAllOutBound: Denies all outbound traffic.
