@@ -1,3 +1,7 @@
+---
+icon: 📘
+---
+
 # 01 - Fundamentals
 
 ## Hiearchy
