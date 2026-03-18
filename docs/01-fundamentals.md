@@ -29,3 +29,18 @@ Some Regions, such as Australia East, have three Availability Zones.  Many Azure
 Some Regions are paired.  This paired arrangement is used for things like geo-redundacy.  In Australia, there are two pairs - Australia East (Sydney) and Australia South East (Melbourne), and Australia Central 1 and Australia Central 2 (both in Canberra).
 
 When creating most Resources, a Region must be selected.
+
+## Frameworks
+
+### Cloud Adoption Framework
+
+The [Cloud Adoption Framework (CAF)](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/overview) is a framework that provides guidance and best practices to help organisations adopt the cloud.  It covers stages such as strategy and planning for adoption of the cloud, as well as how to structure teams for ongoing operational support.
+
+### Well Architected Framework
+
+The [Well Architected Framework (WAF)](https://learn.microsoft.com/en-us/azure/well-architected/) is a framework of best practices and design principles for designing workloads that are resilient, secure and cost optimised.  The framework has 5 pillars:
+- Reliability: Ensuring the workload can meet business needs around resiliency, recovering from failures, etc
+- Security: Protecting business data and operations
+- Cost Optimisation: Running infrastructure in a manner that is cost efficient
+- Operational Excellence: Streamline operations with standards, monitoring and safe practices
+- Performance Efficiency: Scale to meet the demands required of the workload
