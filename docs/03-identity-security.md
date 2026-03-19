@@ -1,4 +1,4 @@
-# 03 - Identity & Security
+# 03 - Identity and Security
 
 ## Identity
 
