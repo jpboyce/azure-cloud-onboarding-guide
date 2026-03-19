@@ -33,6 +33,7 @@ Network Security Groups (NSG) have rules that control what network traffic is al
 - Action: Allow or deny the traffic that matches the rule
 
 A NSG will have some default rules when created:
+
 - AllowVnetInBound: allows all traffic from VirtualNetworks (effectively allows any traffic from a Virtual Network Peer)
 - AllowAzureLoadBalanceInBound: Allows traffic on all ports and protocols from the AzureLoadBalancer service
 - DenyAllInbound: A deny all rule at the bottom of the priority that acts as a catchall
