@@ -25,6 +25,7 @@ Storage Accounts have a Table Service that can store non-relational structured d
 ### Resiliency
 
 Standard General Purpose V2 Storage Accounts have a wide range of resiliency and reliability options.  For redundancy:
+
 - Locally Redundant Storage (LRS): The Storage Account is located in one Availability Zone.  However, the data is replicated multiple times to protect against disk failures
 - Zone Redundant Storage (ZRS): The Storage Account is replicated across multiple Availability Zones in the Region.  If an Availability Zone is unhealth, requests will be automatically routed to the healthy zones.
 - Geo-redundant Storage (GRS): The primary Region functions like LRS (ie. only one Availability Zone used).  Data is replicated to a paired Region.
