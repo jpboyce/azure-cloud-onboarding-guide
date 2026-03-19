@@ -16,6 +16,10 @@ Virtual Networks can be connected in a process called Peering.  Resources in one
 
 A Subnet is a segment of a Virtual Network.  It is given a portion of the Virtual Network's Address Space.  If the Address Space is 10.0.0.0/16, then a Subnet might be assigned 10.0.1.0/24.  Subnets are used to segment the network for security reasons and for workload reasons.  Not all Resources can be connected to the same Subnet, as some require exclusive control of the Subnet.
 
+!!! note
+
+    When creating a Subnet, Azure will reserve 5 IP addresses
+
 ### Network Security Groups
 
 Network Security Groups (NSG) have rules that control what network traffic is allowed.  Each rule has these properties:
