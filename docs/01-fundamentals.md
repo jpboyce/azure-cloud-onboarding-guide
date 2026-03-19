@@ -1,6 +1,3 @@
----
-icon: 📘
----
 
 # 01 - Fundamentals
 
@@ -43,6 +40,7 @@ The [Cloud Adoption Framework (CAF)](https://learn.microsoft.com/en-us/azure/clo
 ### Well Architected Framework
 
 The [Well Architected Framework (WAF)](https://learn.microsoft.com/en-us/azure/well-architected/) is a framework of best practices and design principles for designing workloads that are resilient, secure and cost optimised.  The framework has 5 pillars:
+
 - Reliability: Ensuring the workload can meet business needs around resiliency, recovering from failures, etc
 - Security: Protecting business data and operations
 - Cost Optimisation: Running infrastructure in a manner that is cost efficient
