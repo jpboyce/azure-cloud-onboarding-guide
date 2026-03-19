@@ -1,6 +1,3 @@
----
-icon: fontawesome/book
----
 
 # 01 - Fundamentals
 
