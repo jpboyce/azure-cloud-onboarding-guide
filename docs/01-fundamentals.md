@@ -1,3 +1,6 @@
+---
+icon: book
+---
 
 # 01 - Fundamentals
 
