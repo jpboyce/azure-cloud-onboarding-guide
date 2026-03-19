@@ -1,5 +1,5 @@
 ---
-icon: :book:
+icon: fontawesome/book
 ---
 
 # 01 - Fundamentals
