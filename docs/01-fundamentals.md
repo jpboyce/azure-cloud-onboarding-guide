@@ -1,5 +1,5 @@
 ---
-icon: book
+icon: :book:
 ---
 
 # 01 - Fundamentals
