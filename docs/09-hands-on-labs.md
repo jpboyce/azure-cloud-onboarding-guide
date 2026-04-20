@@ -35,10 +35,17 @@ Create a Resource Group in a Subscription that will contain the lab resources
 
 * The application will have an API component and a web component.  The lab will follow a standard pattern of using an Azure Function App for the API and an App Service for the website
 * Both Function Apps and App Services need an App Service Plan to provide compute capacity to run.
+
+### Create App Service Plan
 * Create an App Service Plan with the Operating System set to Linux and Plan set to Basic B1
 
 !!! warning Cost Implications
     While there is a free plan option (Free F1) it doesn't support vNet integration.  The Basic B1 plan is the cheapest option that supports this feature.  It has a cost of $13.14USD per month.  The Operating System selection can also affect prices, Windows App Service Plans typically cost twice that of Linux plans
+
+### Create Function App Storage
+
+* Function Apps are a server-less hosting option. Because they are server-less, they have no default storage and require a separate Storage Account.
+* The Storage Account type needs to support Blob, Queue and Table storage
 
 ## Lab 03 - DevOps
 
