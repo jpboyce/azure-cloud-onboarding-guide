@@ -10,7 +10,8 @@ export async function GET(request: NextRequest) {
     return jsonError("Missing city parameter.", 400);
   }
 
-  const apiBaseUrl = process.env.WEATHER_API_BASE_URL?.trim().replace(/\/$/, "");
+  const apiBaseUrlRaw = process.env.WEATHER_API_BASE_URL;
+  const apiBaseUrl = apiBaseUrlRaw ? apiBaseUrlRaw.trim().replace(/\/$/, "") : "";
   if (!apiBaseUrl) {
     return jsonError("Server is missing WEATHER_API_BASE_URL configuration.", 500);
   }
@@ -29,10 +30,24 @@ export async function GET(request: NextRequest) {
       cache: "no-store",
     });
 
-    const data = await response.json().catch(() => ({ error: "Invalid API response" }));
+    let data: unknown;
+    try {
+      data = await response.json();
+    } catch {
+      data = { error: "Invalid API response" };
+    }
+
     if (!response.ok) {
+      const message =
+        typeof data === "object" &&
+        data !== null &&
+        "error" in data &&
+        typeof data.error === "string"
+          ? data.error
+          : "Failed to fetch weather data.";
+
       return NextResponse.json(
-        { error: data?.error ?? "Failed to fetch weather data." },
+        { error: message },
         { status: response.status },
       );
     }

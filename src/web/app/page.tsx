@@ -44,10 +44,22 @@ export default function Home() {
 
     try {
       const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
-      const payload = await response.json();
+      let payload: unknown = null;
+      try {
+        payload = await response.json();
+      } catch {
+        payload = null;
+      }
 
       if (!response.ok) {
-        throw new Error(payload?.error ?? `API returned status ${response.status}`);
+        const message =
+          typeof payload === "object" &&
+          payload !== null &&
+          "error" in payload &&
+          typeof payload.error === "string"
+            ? payload.error
+            : `API returned status ${response.status}`;
+        throw new Error(message);
       }
 
       setWeather(payload as Weather);
