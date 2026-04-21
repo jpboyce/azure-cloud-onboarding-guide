@@ -344,7 +344,7 @@
     // Function App base URL, e.g. https://<your-function-app>.azurewebsites.net
     // The value is injected at runtime via a meta tag or window variable if using
     // a startup script, or you can replace the fallback below during deployment.
-    const API_BASE_URL = (window.API_BASE_URL || '').replace(/\/$/, '');
+    const API_BASE_URL = 'https://your-function-app.azurewebsites.net';
 
     // ── Weather fetch ──────────────────────────────────────────────────────────
     async function getWeather() {
