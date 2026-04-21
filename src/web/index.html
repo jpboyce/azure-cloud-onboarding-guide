@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Australian Weather</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sky:        #0a1628;
+      --sky-mid:    #0d2240;
+      --gold:       #e8b84b;
+      --gold-light: #f5d27a;
+      --white:      #f0ece4;
+      --muted:      #8a9ab5;
+      --card-bg:    rgba(255,255,255,0.05);
+      --card-border:rgba(232,184,75,0.2);
+      --radius:     12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: var(--sky);
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,184,75,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(13,34,64,0.8) 0%, transparent 70%);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem 4rem;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+      animation: fadeDown 0.6s ease both;
+    }
+
+    header .eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.6rem;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--white);
+    }
+
+    header h1 span {
+      color: var(--gold);
+    }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 2.5rem;
+      animation: fadeDown 0.6s 0.1s ease both;
+    }
+
+    select {
+      appearance: none;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 0.75rem 2.8rem 0.75rem 1.2rem;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23e8b84b' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      min-width: 220px;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(232,184,75,0.15);
+    }
+
+    select option { background: #0d2240; color: var(--white); }
+
+    button {
+      background: var(--gold);
+      border: none;
+      border-radius: var(--radius);
+      color: var(--sky);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0.75rem 1.8rem;
+      transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    }
+
+    button:hover { background: var(--gold-light); box-shadow: 0 4px 20px rgba(232,184,75,0.3); }
+    button:active { transform: scale(0.97); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── State messages ── */
+    #status {
+      font-size: 0.9rem;
+      color: var(--muted);
+      min-height: 1.4rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      animation: fadeDown 0.4s ease both;
+    }
+
+    #status.error { color: #e07070; }
+
+    /* ── Weather card ── */
+    #weather-card {
+      display: none;
+      width: 100%;
+      max-width: 560px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      backdrop-filter: blur(16px);
+      padding: 2rem 2.2rem;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    #weather-card.visible { display: block; }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.6rem;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .card-location h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      line-height: 1.1;
+      color: var(--white);
+    }
+
+    .card-location .country {
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 0.25rem;
+    }
+
+    .card-condition {
+      text-align: right;
+    }
+
+    .condition-label {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--white);
+    }
+
+    .condition-updated {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    /* ── Temperature ── */
+    .temp-row {
+      display: flex;
+      align-items: baseline;
+      gap: 1.2rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .temp-primary {
+      font-family: 'Playfair Display', serif;
+      font-size: 4.5rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .temp-secondary {
+      font-size: 1.4rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    /* ── Stats grid ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .stat {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--white);
+    }
+
+    .stat-unit {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-left: 0.15rem;
+    }
+
+    /* ── Loader spinner ── */
+    .spinner {
+      display: none;
+      width: 22px;
+      height: 22px;
+      border: 2px solid rgba(232,184,75,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto;
+    }
+
+    .spinner.active { display: block; }
+
+    /* ── Animations ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .temp-primary { font-size: 3.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <p class="eyebrow">Live Conditions</p>
+    <h1>Australian <span>Weather</span></h1>
+  </header>
+
+  <div class="controls">
+    <select id="city-select" aria-label="Select a city">
+      <option value="">Select a city…</option>
+      <option value="Sydney">Sydney</option>
+      <option value="Melbourne">Melbourne</option>
+      <option value="Brisbane">Brisbane</option>
+      <option value="Perth">Perth</option>
+      <option value="Adelaide">Adelaide</option>
+      <option value="Hobart">Hobart</option>
+      <option value="Darwin">Darwin</option>
+      <option value="Canberra">Canberra</option>
+    </select>
+    <button id="fetch-btn" onclick="getWeather()">Get Weather</button>
+  </div>
+
+  <div id="status"></div>
+  <div class="spinner" id="spinner"></div>
+
+  <div id="weather-card">
+    <div class="card-header">
+      <div class="card-location">
+        <h2 id="res-city"></h2>
+        <div class="country" id="res-country"></div>
+      </div>
+      <div class="card-condition">
+        <div class="condition-label" id="res-condition"></div>
+        <div class="condition-updated" id="res-updated"></div>
+      </div>
+    </div>
+
+    <div class="temp-row">
+      <div class="temp-primary"><span id="res-temp-c"></span>°C</div>
+      <div class="temp-secondary"><span id="res-temp-f"></span>°F</div>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-label">Humidity</div>
+        <div class="stat-value"><span id="res-humidity"></span><span class="stat-unit">%</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Wind</div>
+        <div class="stat-value"><span id="res-wind-kph"></span><span class="stat-unit">km/h</span></div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Wind (mph)</div>
+        <div class="stat-value"><span id="res-wind-mph"></span><span class="stat-unit">mph</span></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── Configuration ──────────────────────────────────────────────────────────
+    // Set the API_BASE_URL App Setting in Azure App Service to point at your
+    // Function App base URL, e.g. https://<your-function-app>.azurewebsites.net
+    // The value is injected at runtime via a meta tag or window variable if using
+    // a startup script, or you can replace the fallback below during deployment.
+    const API_BASE_URL = (window.API_BASE_URL || '').replace(/\/$/, '');
+
+    // ── Weather fetch ──────────────────────────────────────────────────────────
+    async function getWeather() {
+      const citySelect = document.getElementById('city-select');
+      const city = citySelect.value;
+
+      if (!city) {
+        setStatus('Please select a city first.', false);
+        return;
+      }
+
+      const btn     = document.getElementById('fetch-btn');
+      const spinner = document.getElementById('spinner');
+      const card    = document.getElementById('weather-card');
+
+      // Loading state
+      btn.disabled = true;
+      card.classList.remove('visible');
+      spinner.classList.add('active');
+      setStatus('Fetching weather data…', false);
+
+      try {
+        const url = `${API_BASE_URL}/api/getWeather?city=${encodeURIComponent(city)}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error(`API returned status ${response.status}`);
+        }
+
+        const data = await response.json();
+        renderWeather(data);
+        setStatus('');
+
+      } catch (err) {
+        setStatus(`Error: ${err.message}`, true);
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        spinner.classList.remove('active');
+      }
+    }
+
+    function renderWeather(d) {
+      document.getElementById('res-city').textContent      = d.city;
+      document.getElementById('res-country').textContent   = d.country;
+      document.getElementById('res-condition').textContent = d.condition;
+      document.getElementById('res-updated').textContent   = `Updated ${d.last_updated}`;
+      document.getElementById('res-temp-c').textContent    = d.temperature_c;
+      document.getElementById('res-temp-f').textContent    = d.temperature_f;
+      document.getElementById('res-humidity').textContent  = d.humidity;
+      document.getElementById('res-wind-kph').textContent  = d.wind_kph;
+      document.getElementById('res-wind-mph').textContent  = d.wind_mph;
+
+      document.getElementById('weather-card').classList.add('visible');
+    }
+
+    function setStatus(msg, isError = false) {
+      const el = document.getElementById('status');
+      el.textContent = msg;
+      el.className = isError ? 'error' : '';
+    }
+
+    // Allow Enter key on the select to trigger fetch
+    document.getElementById('city-select').addEventListener('keydown', e => {
+      if (e.key === 'Enter') getWeather();
+    });
+  </script>
+
+</body>
+</html>
