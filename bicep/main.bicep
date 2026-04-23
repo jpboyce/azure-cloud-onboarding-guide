@@ -8,6 +8,7 @@ var lawName = 'law-lab-${uniqueString(resourceGroup().id)}'
 var appiName = 'appi-lab-${uniqueString(resourceGroup().id)}'
 var uamiFuncName = ''
 var kvName = 'kv-lab-${uniqueString(resourceGroup().id)}'
+var aspName = 'asp-lab-${uniqueString(resourceGroup().id)}'
 
 // RESOURCES
 resource vnet 'Microsoft.Network/virtualNetworks@2025-05-01' = {
@@ -92,6 +93,16 @@ resource kv 'Microsoft.KeyVault/vaults@2025-05-01' = {
       family: 'A'
     }
     tenantId: tenantId
+  }
+}
+
+resource asp 'Microsoft.Web/serverfarms@2025-03-01' = {
+  name: aspName
+  location: location
+  kind: 'linux'
+  sku: {
+    name: 'B1'
+    tier: 'Basic'
   }
 }
 
