@@ -3,6 +3,8 @@ param location string = resourceGroup().location
 
 // VARIABLES
 var vnetName = 'vnet-lab-${uniqueString(resourceGroup().id)}'
+var lawName = 'law-lab-${uniqueString(resourceGroup().id)}'
+var appiName = 'appi-lab-${uniqueString(resourceGroup().id)}'
 
 // RESOURCES
 resource vnet 'Microsoft.Network/virtualNetworks@2025-05-01' = {
@@ -50,6 +52,26 @@ resource vnet 'Microsoft.Network/virtualNetworks@2025-05-01' = {
         }
       }
     ]
+  }
+}
+
+resource law 'Microsoft.OperationalInsights/workspaces@2025-07-01' = {
+  name: lawName
+  location: location
+  properties: {
+    sku: {
+      name: 'PerGB2018'
+    }
+  }
+}
+
+resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: appiName
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    WorkspaceResourceId: law.id
   }
 }
 
