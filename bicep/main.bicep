@@ -5,6 +5,7 @@ param location string = resourceGroup().location
 var vnetName = 'vnet-lab-${uniqueString(resourceGroup().id)}'
 var lawName = 'law-lab-${uniqueString(resourceGroup().id)}'
 var appiName = 'appi-lab-${uniqueString(resourceGroup().id)}'
+var uamiFuncName = ''
 
 // RESOURCES
 resource vnet 'Microsoft.Network/virtualNetworks@2025-05-01' = {
@@ -73,6 +74,11 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
     Application_Type: 'web'
     WorkspaceResourceId: law.id
   }
+}
+
+resource uamiFunc 'Microsoft.ManagedIdentity/userAssignedIdentities@2025-05-31-preview' = {
+  name: uamiFuncName
+  location: location
 }
 
 // OUTPUTS
