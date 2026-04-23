@@ -1,11 +1,13 @@
 // PARAMETERS
 param location string = resourceGroup().location
+param tenantId string
 
 // VARIABLES
 var vnetName = 'vnet-lab-${uniqueString(resourceGroup().id)}'
 var lawName = 'law-lab-${uniqueString(resourceGroup().id)}'
 var appiName = 'appi-lab-${uniqueString(resourceGroup().id)}'
 var uamiFuncName = ''
+var kvName = 'kv-lab-${uniqueString(resourceGroup().id)}'
 
 // RESOURCES
 resource vnet 'Microsoft.Network/virtualNetworks@2025-05-01' = {
@@ -79,6 +81,18 @@ resource appInsights 'Microsoft.Insights/components@2020-02-02' = {
 resource uamiFunc 'Microsoft.ManagedIdentity/userAssignedIdentities@2025-05-31-preview' = {
   name: uamiFuncName
   location: location
+}
+
+resource kv 'Microsoft.KeyVault/vaults@2025-05-01' = {
+  name: kvName
+  location: location
+  properties: {
+    sku: {
+      name: 'standard'
+      family: 'A'
+    }
+    tenantId: tenantId
+  }
 }
 
 // OUTPUTS
